@@ -45,12 +45,13 @@ class myOpenGL:
         # Change Modelview into screen 5 units
         glTranslatef(.0, .0, -5.0)
 
-        # Set "brush" color
-        glColor3f(0.5, 1, 0.5)
-        
         # Rotate on x, y, z axis
         self.angle -= 1
         glRotatef(self.angle, 1, 0, 0)
+
+        
+        # Set "brush" color
+        glColor3f(0.5, 1, 0.5)
 
         # Begin rendering
         glBegin(GL_QUADS)
