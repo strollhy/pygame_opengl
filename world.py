@@ -7,6 +7,46 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
+''' 
+coordinates of vertices 
+'''
+cube = (
+    1, 1, 1, #0
+    -1, 1, 1, #1
+    -1, -1, 1, #2
+    1, -1, 1, #3
+    1, 1, -1, #4
+    -1, 1, -1, #5
+    -1, -1, -1, #6
+    1, -1, -1 #7
+)
+
+''' 
+colors of vertices 
+'''
+color = (
+    1, 1, 0,
+    1, 1, 0,
+    1, 0, 0,
+    1, 0, 0,
+    0, 1, 0,
+    0, 1, 0,
+    0, 0, 1,
+    0, 0, 1
+)
+
+''' 
+Define the vertex indices for the cube 
+'''
+indice = (
+    0, 1, 2, 3, # front face
+    0, 4, 5, 1, # top face
+    4, 0, 3, 7, # right face
+    1, 5, 6, 2, # left face
+    3, 2, 6, 7, # bottom face
+    4, 5, 6, 7, # back face
+)
+
 
 class myOpenGL:
 
@@ -46,25 +86,30 @@ class myOpenGL:
         glTranslatef(.0, .0, -5.0)
 
         # Rotate on x, y, z axis
-        self.angle += 1
+        self.angle += 2
         self.angle %= 360
-        glRotatef(self.angle, 1, 0, 0)
+        glRotatef(self.angle, -1, 1, -1)
 
+        # Render cube via list
+        # Enable client to use vertex array and color array
+        glEnableClientState(GL_VERTEX_ARRAY)
+        glEnableClientState(GL_COLOR_ARRAY)
+
+        # Define color and coordinate for each vertex
+        glColorPointer(3, GL_FLOAT, 0, color)
+        glVertexPointer(3, GL_FLOAT, 0, cube)
+
+        # Draw the cube
+        glDrawElements(GL_QUADS, len(indice), GL_UNSIGNED_INT, indice)
         
-        # Set "brush" color
-        glColor3f(0.5, 1, 0.5)
-
-        # Begin rendering
-        glBegin(GL_QUADS)
-        glVertex3f(-1, 1, 0)
-        glVertex3f(1, 1, 0)
-        glVertex3f(1, -1, 0)
-        glVertex3f(-1, -1, 0)
-        glEnd()
+        # Disable arrays
+        glDisableClientState(GL_COLOR_ARRAY)
+        glDisableClientState(GL_VERTEX_ARRAY)
+  
 
 
 
-###
+#####
 def main():
     # Initialize pygame
     pygame.init()
@@ -73,7 +118,6 @@ def main():
 
     # clock for framerate
     clock = pygame.time.Clock()
-
 
     # Initialize opengl
     opengl = myOpenGL()
@@ -94,8 +138,5 @@ def main():
         # Show the screen
         pygame.display.flip()
 
-        # Show the screen
-        pygame.display.flip()
-
 if __name__ == "__main__":
-  main()
+    main()
