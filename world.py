@@ -94,8 +94,5 @@ def main():
         # Show the screen
         pygame.display.flip()
 
-        # Show the screen
-        pygame.display.flip()
-
 if __name__ == "__main__":
   main()
