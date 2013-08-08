@@ -46,14 +46,15 @@ class myOpenGL:
         glTranslatef(.0, .0, -5.0)
 
         # Rotate on x, y, z axis
-        self.angle += 1
+        self.angle += 2
         self.angle %= 360
-        glRotatef(self.angle, 1, 0, 0)
+        glRotatef(self.angle, -1, 1, -1)
 
         
+        ''' Render Cube'''
+        ## Front face
         # Set "brush" color
-        glColor3f(0.5, 1, 0.5)
-
+        glColor3f(.3, 1, .3)
         # Begin rendering
         glBegin(GL_QUADS)
         glVertex3f(-1, 1, 0)
@@ -62,9 +63,64 @@ class myOpenGL:
         glVertex3f(-1, -1, 0)
         glEnd()
 
+        ## Back face
+        # Set "brush" color
+        glColor3f(1, 1, 1)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(-1, 1, -2)
+        glVertex3f(1, 1, -2)
+        glVertex3f(1, -1, -2)
+        glVertex3f(-1, -1, -2)
+        glEnd()
+
+        ## Top face
+        # Set "brush" color
+        glColor3f(1, .3, .3)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(-1, 1, 0)
+        glVertex3f(1, 1, 0)
+        glVertex3f(1, 1, -2)
+        glVertex3f(-1, 1, -2)
+        glEnd()
+
+        ## Bottom face
+        # Set "brush" color
+        glColor3f(1, 1, .3)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(1, -1, 0)
+        glVertex3f(1, -1, -2)
+        glVertex3f(-1, -1, -2)
+        glVertex3f(-1, -1, 0)
+        glEnd()
+
+        ## Right face
+        # Set "brush" color
+        glColor3f(.3, .3, 1)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(1, 1, -2)
+        glVertex3f(1, 1, 0)
+        glVertex3f(1, -1, 0)
+        glVertex3f(1, -1, -2)
+        glEnd()
+
+        ## Left face
+        # Set "brush" color
+        glColor3f(.3, 1, 1)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(-1, 1, 0)
+        glVertex3f(-1, 1, -2)
+        glVertex3f(-1, -1, -2)
+        glVertex3f(-1, -1, 0)
+        glEnd()
 
 
-###
+
+#####
 def main():
     # Initialize pygame
     pygame.init()
@@ -73,7 +129,6 @@ def main():
 
     # clock for framerate
     clock = pygame.time.Clock()
-
 
     # Initialize opengl
     opengl = myOpenGL()
@@ -94,8 +149,5 @@ def main():
         # Show the screen
         pygame.display.flip()
 
-        # Show the screen
-        pygame.display.flip()
-
 if __name__ == "__main__":
-  main()
+    main()
