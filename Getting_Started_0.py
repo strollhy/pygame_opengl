@@ -85,9 +85,14 @@ def main():
             if event.type == KEYUP and event.key == K_ESCAPE:
                 return
 
+        # Set frame rate
         clock.tick(50)
 
+        # Start drawing
         opengl.draw()
+
+        # Show the screen
+        pygame.display.flip()
 
         # Show the screen
         pygame.display.flip()
