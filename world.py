@@ -22,6 +22,7 @@ class myOpenGL:
 
         # Default parameters
         self.angle = 0
+        self.texIDs = self.loadTexture()
 
     def resize(self, width, height):
         glViewport(0, 0, width, height)
@@ -30,6 +31,41 @@ class myOpenGL:
         gluPerspective(60., float(width)/height, 1., 10000.)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
+
+    def loadTexture(self, imgName = "texture.png"):
+        im = pygame.image.load(imgName)
+        try:
+            ix, iy, image = im.get_width(), im.get_height(),  pygame.image.tostring(im, "RGBA")
+        except SystemError:
+            ix, iy, image = im.get_width(), im.get_height(),  pygame.image.tostring(im, "RGBX")
+
+        IDs = []
+        # a Nearest-filtered texture...
+        ID = glGenTextures(1)
+        IDs.append( ID )
+        glBindTexture(GL_TEXTURE_2D, ID)
+        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
+        # linear-filtered
+        ID = glGenTextures(1)
+        IDs.append( ID )
+        glBindTexture(GL_TEXTURE_2D, ID)
+        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR)
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
+        # linear + mip-mapping
+        ID = glGenTextures(1)
+        IDs.append( ID )
+        glBindTexture(GL_TEXTURE_2D, ID)
+        glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST)
+        gluBuild2DMipmaps(GL_TEXTURE_2D, 3, ix, iy, GL_RGBA, GL_UNSIGNED_BYTE, image)
+
+        return IDs
 
     def draw(self):
         # Reset screen 
@@ -46,22 +82,30 @@ class myOpenGL:
         glTranslatef(.0, .0, -5.0)
 
         # Rotate on x, y, z axis
-        self.angle += 1
+        self.angle += 0
         self.angle %= 360
-        glRotatef(self.angle, 1, 0, 0)
+        #glRotatef(self.angle, 1, 0, 0)
 
-        
-        # Set "brush" color
-        glColor3f(0.5, 1, 0.5)
+        glEnable(GL_TEXTURE_2D)
+        #
+        glBindTexture(GL_TEXTURE_2D, self.texIDs[0])
 
-        # Begin rendering
         glBegin(GL_QUADS)
-        glVertex3f(-1, 1, 0)
-        glVertex3f(1, 1, 0)
-        glVertex3f(1, -1, 0)
+        
+        glTexCoord2f(1, 0)
         glVertex3f(-1, -1, 0)
-        glEnd()
 
+        glTexCoord2f(1, .25)
+        glVertex3f(1, -1, 0)
+
+        glTexCoord2f(.75, .25)
+        glVertex3f(1, 1, 0)
+
+        glTexCoord2f(.75, 0)
+        glVertex3f(-1, 1, 0)
+
+        glEnd()
+        glDisable(GL_TEXTURE_2D)
 
 
 ###
@@ -90,9 +134,6 @@ def main():
 
         # Start drawing
         opengl.draw()
-
-        # Show the screen
-        pygame.display.flip()
 
         # Show the screen
         pygame.display.flip()
