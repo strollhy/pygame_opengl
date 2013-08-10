@@ -34,6 +34,12 @@ class myOpenGL:
 
     def loadTexture(self, imgName = "texture.png"):
         im = pygame.image.load(imgName)
+        '''
+        In pygame the coordinates is rotated 90 degree clockwise
+        '''
+        im = pygame.transform.rotate(im, 180)
+        im = pygame.transform.flip(im, True, False)
+
         try:
             ix, iy, image = im.get_width(), im.get_height(),  pygame.image.tostring(im, "RGBA")
         except SystemError:
@@ -82,26 +88,34 @@ class myOpenGL:
         glTranslatef(.0, .0, -5.0)
 
         # Rotate on x, y, z axis
-        self.angle += 0
+        self.angle += 2
         self.angle %= 360
-        #glRotatef(self.angle, 1, 0, 0)
+        glRotatef(self.angle, 1, 0, 0)
 
         glEnable(GL_TEXTURE_2D)
         #
         glBindTexture(GL_TEXTURE_2D, self.texIDs[0])
 
+        # Begin rendering
         glBegin(GL_QUADS)
-        
-        glTexCoord2f(1, 0)
+        ''' 
+        Assign texture and geometric coordinates
+        In pygame the coordinates is rotated 90 degree clockwise
+        '''
+        # Left Bottom
+        glTexCoord2f(0, 0)
         glVertex3f(-1, -1, 0)
 
-        glTexCoord2f(1, .25)
+        # Right Bottom
+        glTexCoord2f(.25, 0)
         glVertex3f(1, -1, 0)
 
-        glTexCoord2f(.75, .25)
+        # Right Top
+        glTexCoord2f(.25, .25)
         glVertex3f(1, 1, 0)
 
-        glTexCoord2f(.75, 0)
+        # Left Top2
+        glTexCoord2f(0, .25)
         glVertex3f(-1, 1, 0)
 
         glEnd()
