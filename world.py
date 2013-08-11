@@ -7,6 +7,31 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
+RATIO = 0.25    
+TEXTURE_COOD = (   (1, 1),
+                    (1, 2),
+                    (1, 3),
+                    (2, 1),
+                    (2, 2),
+                    (2, 3)
+                )
+
+def genTexcoord(coordId):
+    ''' Coordinate is generate clockwisely'''
+    x, y = TEXTURE_COOD[coordId]
+    x, y = [x*RATIO, y*RATIO]
+    return (
+        (x-RATIO, y-RATIO),
+        (x-RATIO, y),
+        (x, y),
+        (x, y-RATIO)
+    )
+
+def genPosition(x, y, z, n=.5):
+    return (
+        (x-n, y-n, z), (x-n, y+n, z), (x+n, y+n, z), (x+n, y-n, z) # front
+    )
+
 
 class myOpenGL:
 
@@ -73,7 +98,7 @@ class myOpenGL:
 
         return IDs
 
-    def draw(self):
+    def render(self):
         # Reset screen 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glFlush()
@@ -84,43 +109,46 @@ class myOpenGL:
         # Reset Modelview
         glLoadIdentity()
 
-        # Change Modelview into screen 5 units
-        glTranslatef(.0, .0, -5.0)
+        # Change Modelview into screen 2 units
+        glTranslatef(.0, .0, -2.0)
 
         # Rotate on x, y, z axis
         self.angle += 2
         self.angle %= 360
         glRotatef(self.angle, 1, 0, 0)
 
+        # Generate coordinates
+        pos = genPosition(0, 0, 0)
+        tex = genTexcoord(0)
+
+        # Render cube
+        self.__renderCube(pos, tex)
+
+        
+
+    def __renderCube(self, position, texCoord):
+        ''' 
+        Assign texture and geometric coordinates
+        '''
+        if len(position) != len(texCoord):
+            return -1
+
         glEnable(GL_TEXTURE_2D)
-        #
         glBindTexture(GL_TEXTURE_2D, self.texIDs[0])
 
         # Begin rendering
         glBegin(GL_QUADS)
-        ''' 
-        Assign texture and geometric coordinates
-        In pygame the coordinates is rotated 90 degree clockwise
-        '''
-        # Left Bottom
-        glTexCoord2f(0, 0)
-        glVertex3f(-1, -1, 0)
 
-        # Right Bottom
-        glTexCoord2f(.25, 0)
-        glVertex3f(1, -1, 0)
+        ''''''
+        texCoord = iter(texCoord)
+        for pos in position:
+            tex = texCoord.next()
+            glTexCoord2f(*tex)
+            glVertex3f(*pos)
 
-        # Right Top
-        glTexCoord2f(.25, .25)
-        glVertex3f(1, 1, 0)
-
-        # Left Top2
-        glTexCoord2f(0, .25)
-        glVertex3f(-1, 1, 0)
-
+        ''' '''
         glEnd()
         glDisable(GL_TEXTURE_2D)
-
 
 ###
 def main():
@@ -146,8 +174,8 @@ def main():
         # Set frame rate
         clock.tick(50)
 
-        # Start drawing
-        opengl.draw()
+        # Start rendering
+        opengl.render()
 
         # Show the screen
         pygame.display.flip()
