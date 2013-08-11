@@ -9,11 +9,11 @@ from OpenGL.GLU import *
 
 RATIO = 0.25    
 TEXTURE_COOD = (   (1, 1),
-                    (1, 2),
-                    (1, 3),
                     (2, 1),
+                    (3, 1),
+                    (1, 2),
                     (2, 2),
-                    (2, 3)
+                    (3, 2)
                 )
 
 def genTexcoord(coordId):
@@ -21,15 +21,18 @@ def genTexcoord(coordId):
     x, y = TEXTURE_COOD[coordId]
     x, y = [x*RATIO, y*RATIO]
     return (
-        (x-RATIO, y-RATIO),
-        (x-RATIO, y),
-        (x, y),
-        (x, y-RATIO)
+        (x-RATIO, y-RATIO), (x, y-RATIO), (x, y), (x-RATIO, y)
     )
 
-def genPosition(x, y, z, n=.5):
+
+def genCube(x, y, z, n=.5):
     return (
-        (x-n, y-n, z), (x-n, y+n, z), (x+n, y+n, z), (x+n, y-n, z) # front
+        ((x-n,y+n,z-n), (x-n,y+n,z+n), (x+n,y+n,z+n), (x+n,y+n,z-n)),  # top
+        ((x-n,y-n,z-n), (x+n,y-n,z-n), (x+n,y-n,z+n), (x-n,y-n,z+n)),  # bottom
+        ((x-n,y-n,z-n), (x-n,y-n,z+n), (x-n,y+n,z+n), (x-n,y+n,z-n)),  # left
+        ((x+n,y-n,z+n), (x+n,y-n,z-n), (x+n,y+n,z-n), (x+n,y+n,z+n)),  # right
+        ((x-n,y-n,z+n), (x+n,y-n,z+n), (x+n,y+n,z+n), (x-n,y+n,z+n)),  # front
+        ((x+n,y-n,z-n), (x-n,y-n,z-n), (x-n,y+n,z-n), (x+n,y+n,z-n)),  # back
     )
 
 
@@ -47,6 +50,7 @@ class myOpenGL:
 
         # Default parameters
         self.angle = 0
+        self.textId = 0
         self.texIDs = self.loadTexture()
 
     def resize(self, width, height):
@@ -115,18 +119,20 @@ class myOpenGL:
         # Rotate on x, y, z axis
         self.angle += 2
         self.angle %= 360
-        glRotatef(self.angle, 1, 0, 0)
+        glRotatef(self.angle, 0, 1, 0)
 
         # Generate coordinates
-        pos = genPosition(0, 0, 0)
-        tex = genTexcoord(0)
+        pos = genCube(0, 0, 0)
+        tex = genTexcoord(self.textId)
 
         # Render cube
         self.__renderCube(pos, tex)
 
-        
-
     def __renderCube(self, position, texCoord):
+        for pos in position:
+            self.__renderRect(pos, texCoord)
+        
+    def __renderRect(self, position, texCoord):
         ''' 
         Assign texture and geometric coordinates
         '''
@@ -170,6 +176,16 @@ def main():
                 return
             if event.type == KEYUP and event.key == K_ESCAPE:
                 return
+
+            if event.type == KEYUP and event.key == K_1:
+                opengl.textId = 0
+                
+            if event.type == KEYUP and event.key == K_2:
+                opengl.textId = 1
+                
+            if event.type == KEYUP and event.key == K_3:
+                opengl.textId = 2
+                
 
         # Set frame rate
         clock.tick(50)
