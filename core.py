@@ -14,7 +14,7 @@ class Core:
         pygame.display.set_caption("Hello, World!")
 
         # clock for framerate
-        clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
 
         # Initialize graphic settings
         self.graphic = Graphic(SCREEN_SIZE)
@@ -43,7 +43,7 @@ class Core:
                     self.graphic.textId = 2
 
             # Set frame rate
-            clock.tick(50)
+            self.clock.tick(50)
 
             # Render background
             self.graphic.render()
