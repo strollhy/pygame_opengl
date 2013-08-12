@@ -42,6 +42,15 @@ class Core:
                 if event.type == KEYUP and event.key == K_3:
                     self.graphic.textId = 2
 
+                if event.type == KEYUP and event.key == K_4:
+                    self.graphic.textId = 3
+
+                if event.type == KEYUP and event.key == K_5:
+                    self.graphic.textId = 4
+
+                if event.type == KEYUP and event.key == K_6:
+                    self.graphic.textId = 5
+
             # Set frame rate
             self.clock.tick(50)
 
