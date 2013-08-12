@@ -30,7 +30,7 @@ class Graphic:
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
-    def loadTexture(self, imgName = "texture.png"):
+    def loadTexture(self, imgName = "texture3.png"):
         im = pygame.image.load(imgName)
         '''
         In pygame the coordinates is rotated 90 degree clockwise

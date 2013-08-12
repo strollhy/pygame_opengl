@@ -14,7 +14,7 @@ class Core:
         pygame.display.set_caption("Hello, World!")
 
         # clock for framerate
-        clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock()
 
         # Initialize graphic settings
         self.graphic = Graphic(SCREEN_SIZE)
@@ -42,8 +42,17 @@ class Core:
                 if event.type == KEYUP and event.key == K_3:
                     self.graphic.textId = 2
 
+                if event.type == KEYUP and event.key == K_4:
+                    self.graphic.textId = 3
+
+                if event.type == KEYUP and event.key == K_5:
+                    self.graphic.textId = 4
+
+                if event.type == KEYUP and event.key == K_6:
+                    self.graphic.textId = 5
+
             # Set frame rate
-            clock.tick(50)
+            self.clock.tick(50)
 
             # Render background
             self.graphic.render()
