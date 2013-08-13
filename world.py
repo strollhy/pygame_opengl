@@ -7,6 +7,8 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
+# Movement speed
+SPEED = .5
 
 class myOpenGL:
 
@@ -22,6 +24,7 @@ class myOpenGL:
 
         # Default parameters
         self.angle = 0
+        self.position = (0, 0, -5)
 
     def resize(self, width, height):
         glViewport(0, 0, width, height)
@@ -43,14 +46,15 @@ class myOpenGL:
         glLoadIdentity()
 
         # Change Modelview into screen 5 units
-        glTranslatef(.0, .0, -5.0)
+        glTranslatef(*self.position)
 
+        '''
         # Rotate on x, y, z axis
         self.angle += 1
         self.angle %= 360
         glRotatef(self.angle, 1, 0, 0)
+        '''
 
-        
         # Set "brush" color
         glColor3f(0.5, 1, 0.5)
 
@@ -61,8 +65,6 @@ class myOpenGL:
         glVertex3f(1, -1, 0)
         glVertex3f(-1, -1, 0)
         glEnd()
-
-
 
 ###
 def main():
@@ -78,12 +80,45 @@ def main():
     # Initialize opengl
     opengl = myOpenGL()
 
+    dx = dy = dz = 0
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
             if event.type == KEYUP and event.key == K_ESCAPE:
                 return
+
+            ''' For movement '''
+            # move forward
+            if event.type == KEYDOWN and event.key == K_w:
+                dz = SPEED
+            
+            if event.type == KEYUP and event.key == K_w:
+                dz = 0
+            
+            # move backward
+            if event.type == KEYDOWN and event.key == K_s:
+                dz = -SPEED
+
+            if event.type == KEYUP and event.key == K_s:
+                dz = 0
+
+            # move left
+            if event.type == KEYDOWN and event.key == K_a:
+                dx = SPEED
+            
+            if event.type == KEYUP and event.key == K_a:
+                dx = 0
+
+            # move right
+            if event.type == KEYDOWN and event.key == K_d:
+                dx = -SPEED
+            
+            if event.type == KEYUP and event.key == K_d:
+                dx = 0
+
+        x, y, z = opengl.position
+        opengl.position = (x+dx, y+dy, z+dz)
 
         # Set frame rate
         clock.tick(50)
