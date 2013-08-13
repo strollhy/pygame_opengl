@@ -67,10 +67,10 @@ class Core:
     def draw(self):
         # Generate coordinates
         pos = World.genCube(0, 0, 0)
-        tex = World.genTexcoord(self.graphic.textId)
+        tex = Graphic.genTexcoord(self.graphic.textId)
 
         # Render cube
-        self.graphic.rendRects(pos, tex) 
+        self.graphic.drawRects(pos, tex) 
 
 if __name__ == "__main__":
     core = Core()

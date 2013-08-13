@@ -4,6 +4,14 @@ import pygame
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
+RATIO = 0.0625    
+TEXTURE_COOD = ( (3, 15),
+                 (2, 16),
+                 (3, 16),
+                 (4, 16),
+                 (5, 16),
+                 (6, 16)
+                )
 
 class Graphic:
 
@@ -20,7 +28,7 @@ class Graphic:
         # Default parameters
         self.angle = 0
         self.textId = 0
-        self.texIDs = self.loadTexture()
+        self.texIDs = self.loadTexture("texture3.png")
 
     def resize(self, width, height):
         glViewport(0, 0, width, height)
@@ -30,7 +38,16 @@ class Graphic:
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
-    def loadTexture(self, imgName = "texture3.png"):
+    @staticmethod
+    def genTexcoord(coordId):
+        ''' Coordinate is generate clockwisely'''
+        x, y = TEXTURE_COOD[coordId]
+        x, y = [x*RATIO, y*RATIO]
+        return (
+            (x-RATIO, y-RATIO), (x, y-RATIO), (x, y), (x-RATIO, y)
+        )
+
+    def loadTexture(self, imgName = "texture.png"):
         im = pygame.image.load(imgName)
         '''
         In pygame the coordinates is rotated 90 degree clockwise
@@ -71,6 +88,7 @@ class Graphic:
 
         return IDs
 
+    ### Render the environment
     def render(self):
         # Reset screen 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -90,11 +108,13 @@ class Graphic:
         self.angle %= 360
         glRotatef(self.angle, 0, 1, 0)
 
-    def rendRects(self, position, texCoord):
+    ### Draw rectangles
+    def drawRects(self, position, texCoord):
         for pos in position:
-            self.rendRect(pos, texCoord)
-        
-    def rendRect(self, position, texCoord):
+            self.drawRect(pos, texCoord)
+
+    ### Draw rectangle
+    def drawRect(self, position, texCoord):
         ''' 
         Assign texture and geometric coordinates
         '''
@@ -104,7 +124,7 @@ class Graphic:
         glEnable(GL_TEXTURE_2D)
         glBindTexture(GL_TEXTURE_2D, self.texIDs[0])
 
-        # Begin rending
+        # Begin drawing
         glBegin(GL_QUADS)
 
         ''''''
