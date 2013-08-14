@@ -23,8 +23,8 @@ class myOpenGL:
         glLoadIdentity()
 
         # Default parameters
-        self.angle = 0
-        self.position = (0, 0, -5)
+        self.sight = (0, 0, -1)
+        self.position = (0, 0, 5)
 
     def resize(self, width, height):
         glViewport(0, 0, width, height)
@@ -45,15 +45,10 @@ class myOpenGL:
         # Reset Modelview
         glLoadIdentity()
 
-        # Change Modelview into screen 5 units
-        glTranslatef(*self.position)
+        # Set camera
+        param = self.position + self.sight + (0,1,0)
+        gluLookAt(*param)
 
-        '''
-        # Rotate on x, y, z axis
-        self.angle += 1
-        self.angle %= 360
-        glRotatef(self.angle, 1, 0, 0)
-        '''
 
         # Set "brush" color
         glColor3f(0.5, 1, 0.5)
@@ -91,34 +86,37 @@ def main():
             ''' For movement '''
             # move forward
             if event.type == KEYDOWN and event.key == K_w:
-                dz = SPEED
+                dz = -SPEED
             
             if event.type == KEYUP and event.key == K_w:
                 dz = 0
             
             # move backward
             if event.type == KEYDOWN and event.key == K_s:
-                dz = -SPEED
+                dz = SPEED
 
             if event.type == KEYUP and event.key == K_s:
                 dz = 0
 
             # move left
             if event.type == KEYDOWN and event.key == K_a:
-                dx = SPEED
+                dx = -SPEED
             
             if event.type == KEYUP and event.key == K_a:
                 dx = 0
 
             # move right
             if event.type == KEYDOWN and event.key == K_d:
-                dx = -SPEED
+                dx = SPEED
             
             if event.type == KEYUP and event.key == K_d:
                 dx = 0
 
         x, y, z = opengl.position
         opengl.position = (x+dx, y+dy, z+dz)
+
+        x, y, z = opengl.sight
+        opengl.sight = (x+dx, y+dy, z+dz)
 
         # Set frame rate
         clock.tick(50)
