@@ -85,7 +85,7 @@ def main():
             if event.type == KEYUP and event.key == K_ESCAPE:
                 return
 
-            ''' For view point '''
+            ''' For sight direction '''
             # look up
             if event.type == KEYDOWN and event.key == K_UP:
                 ty = SPEED
@@ -114,15 +114,19 @@ def main():
             if event.type == KEYUP and event.key == K_RIGHT:
                 tx = 0
 
-        x, y, z = opengl.sight
+        # Get and update sight angle
         a, b = opengl.angle
         a, b = a + tx, b + ty
         b = max(-90, min(90, b))
         opengl.angle = (a, b)
 
-        x = 20*math.sin(math.radians(a/2))*math.cos(math.radians(a/2))
-        y = 20*math.sin(math.radians(b/2))*math.cos(math.radians(b/2))
-        z = 20*math.sin(math.radians(a/2))*math.sin(math.radians(a/2)) + 20*math.sin(math.radians(a/2))*math.sin(math.radians(b/2))
+        # Update pointing vector for camera
+        # Spin radius: 10
+        radius = 10
+        x, y, z = opengl.sight
+        x = 2*math.sin(math.radians(a/2))*math.cos(math.radians(a/2)) * radius
+        y = 2*math.sin(math.radians(b/2))*math.cos(math.radians(b/2)) * radius
+        z = (2*math.sin(math.radians(a/2))*math.sin(math.radians(a/2)) + 2*math.sin(math.radians(a/2))*math.sin(math.radians(b/2))) * radius
 
         print x, y, z
         opengl.sight = (x, y, z)
