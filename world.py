@@ -52,14 +52,71 @@ class myOpenGL:
         param = self.position + self.sight + (0,1,0)
         gluLookAt(*param)
 
-        # Set "brush" color
-        glColor3f(0.5, 1, 0.5)
 
+        ''' Render Cube'''
+        ## Front face
+        # Set "brush" color
+        glColor3f(.3, 1, .3)
         # Begin rendering
         glBegin(GL_QUADS)
         glVertex3f(-1, 1, 0)
         glVertex3f(1, 1, 0)
         glVertex3f(1, -1, 0)
+        glVertex3f(-1, -1, 0)
+        glEnd()
+
+        ## Back face
+        # Set "brush" color
+        glColor3f(1, 1, 1)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(-1, 1, -2)
+        glVertex3f(1, 1, -2)
+        glVertex3f(1, -1, -2)
+        glVertex3f(-1, -1, -2)
+        glEnd()
+
+        ## Top face
+        # Set "brush" color
+        glColor3f(1, .3, .3)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(-1, 1, 0)
+        glVertex3f(1, 1, 0)
+        glVertex3f(1, 1, -2)
+        glVertex3f(-1, 1, -2)
+        glEnd()
+
+        ## Bottom face
+        # Set "brush" color
+        glColor3f(1, 1, .3)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(1, -1, 0)
+        glVertex3f(1, -1, -2)
+        glVertex3f(-1, -1, -2)
+        glVertex3f(-1, -1, 0)
+        glEnd()
+
+        ## Right face
+        # Set "brush" color
+        glColor3f(.3, .3, 1)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(1, 1, -2)
+        glVertex3f(1, 1, 0)
+        glVertex3f(1, -1, 0)
+        glVertex3f(1, -1, -2)
+        glEnd()
+
+        ## Left face
+        # Set "brush" color
+        glColor3f(.3, 1, 1)
+        # Begin rendering
+        glBegin(GL_QUADS)
+        glVertex3f(-1, 1, 0)
+        glVertex3f(-1, 1, -2)
+        glVertex3f(-1, -1, -2)
         glVertex3f(-1, -1, 0)
         glEnd()
 
@@ -77,13 +134,44 @@ def main():
     # Initialize opengl
     opengl = myOpenGL()
 
-    tx = ty = dz = 0
+    dx = dy = dz = 0
+    tx = ty = tz = 0
+
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
             if event.type == KEYUP and event.key == K_ESCAPE:
                 return
+
+            ''' For movement '''
+            # move forward
+            if event.type == KEYDOWN and event.key == K_w:
+                dz = -SPEED
+            
+            if event.type == KEYUP and event.key == K_w:
+                dz = 0
+            
+            # move backward
+            if event.type == KEYDOWN and event.key == K_s:
+                dz = SPEED
+
+            if event.type == KEYUP and event.key == K_s:
+                dz = 0
+
+            # move left
+            if event.type == KEYDOWN and event.key == K_a:
+                dx = -SPEED
+            
+            if event.type == KEYUP and event.key == K_a:
+                dx = 0
+
+            # move right
+            if event.type == KEYDOWN and event.key == K_d:
+                dx = SPEED
+            
+            if event.type == KEYUP and event.key == K_d:
+                dx = 0
 
             ''' For sight direction '''
             # look up
@@ -114,22 +202,29 @@ def main():
             if event.type == KEYUP and event.key == K_RIGHT:
                 tx = 0
 
-        # Get and update sight angle
-        a, b = opengl.angle
-        a, b = a + tx, b + ty
-        b = max(-90, min(90, b))
-        opengl.angle = (a, b)
+        if tx != 0 or ty != 0:
+            # Get and update sight angle
+            a, b = opengl.angle
+            a, b = a + tx, b + ty
+            b = max(-90, min(90, b))
+            opengl.angle = (a, b)
 
-        # Update pointing vector for camera
-        # Spin radius: 10
-        radius = 10
+            # Update pointing vector for camera
+            # Spin radius: 10
+            radius = 1
+            x, y, z = opengl.sight
+            x += 2*math.sin(math.radians(a/2))*math.cos(math.radians(a/2)) * radius
+            y += 2*math.sin(math.radians(b/2))*math.cos(math.radians(b/2)) * radius
+            z += (2*math.sin(math.radians(a/2))*math.sin(math.radians(a/2)) + 2*math.sin(math.radians(a/2))*math.sin(math.radians(b/2))) * radius
+            opengl.sight = (x, y, z)
+        
         x, y, z = opengl.sight
-        x = 2*math.sin(math.radians(a/2))*math.cos(math.radians(a/2)) * radius
-        y = 2*math.sin(math.radians(b/2))*math.cos(math.radians(b/2)) * radius
-        z = (2*math.sin(math.radians(a/2))*math.sin(math.radians(a/2)) + 2*math.sin(math.radians(a/2))*math.sin(math.radians(b/2))) * radius
+        opengl.sight = (x+dx, y+dy, z+dz)
 
-        print x, y, z
-        opengl.sight = (x, y, z)
+        # Update camera position
+        print x,y,z
+        x, y, z = opengl.position
+        opengl.position = (x+dx, y+dy, z+dz)
 
         # Set frame rate
         clock.tick(50)
