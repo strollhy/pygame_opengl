@@ -1,5 +1,7 @@
 SCREEN_SIZE = (320, 240)
 
+import math
+
 import pygame
 from pygame.locals import *
 
@@ -8,7 +10,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 
 # Movement speed
-SPEED = .5
+SPEED = 1.0
 
 class myOpenGL:
 
@@ -23,7 +25,8 @@ class myOpenGL:
         glLoadIdentity()
 
         # Default parameters
-        self.sight = (0, 0, -1)
+        self.angle = (0, 0)
+        self.sight = (0, 0, -10)
         self.position = (0, 0, 5)
 
     def resize(self, width, height):
@@ -48,7 +51,6 @@ class myOpenGL:
         # Set camera
         param = self.position + self.sight + (0,1,0)
         gluLookAt(*param)
-
 
         # Set "brush" color
         glColor3f(0.5, 1, 0.5)
@@ -75,7 +77,7 @@ def main():
     # Initialize opengl
     opengl = myOpenGL()
 
-    dx = dy = dz = 0
+    tx = ty = dz = 0
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -83,40 +85,47 @@ def main():
             if event.type == KEYUP and event.key == K_ESCAPE:
                 return
 
-            ''' For movement '''
-            # move forward
-            if event.type == KEYDOWN and event.key == K_w:
-                dz = -SPEED
+            ''' For view point '''
+            # look up
+            if event.type == KEYDOWN and event.key == K_UP:
+                ty = SPEED
             
-            if event.type == KEYUP and event.key == K_w:
-                dz = 0
+            if event.type == KEYUP and event.key == K_UP:
+                ty = 0
             
-            # move backward
-            if event.type == KEYDOWN and event.key == K_s:
-                dz = SPEED
+            # look down
+            if event.type == KEYDOWN and event.key == K_DOWN:
+                ty = -SPEED
 
-            if event.type == KEYUP and event.key == K_s:
-                dz = 0
+            if event.type == KEYUP and event.key == K_DOWN:
+                ty = 0
 
-            # move left
-            if event.type == KEYDOWN and event.key == K_a:
-                dx = -SPEED
+            # look left
+            if event.type == KEYDOWN and event.key == K_LEFT:
+                tx = -SPEED
             
-            if event.type == KEYUP and event.key == K_a:
-                dx = 0
+            if event.type == KEYUP and event.key == K_LEFT:
+                tx = 0
 
-            # move right
-            if event.type == KEYDOWN and event.key == K_d:
-                dx = SPEED
+            # look right
+            if event.type == KEYDOWN and event.key == K_RIGHT:
+                tx = SPEED
             
-            if event.type == KEYUP and event.key == K_d:
-                dx = 0
-
-        x, y, z = opengl.position
-        opengl.position = (x+dx, y+dy, z+dz)
+            if event.type == KEYUP and event.key == K_RIGHT:
+                tx = 0
 
         x, y, z = opengl.sight
-        opengl.sight = (x+dx, y+dy, z+dz)
+        a, b = opengl.angle
+        a, b = a + tx, b + ty
+        b = max(-90, min(90, b))
+        opengl.angle = (a, b)
+
+        x = 20*math.sin(math.radians(a/2))*math.cos(math.radians(a/2))
+        y = 20*math.sin(math.radians(b/2))*math.cos(math.radians(b/2))
+        z = 20*math.sin(math.radians(a/2))*math.sin(math.radians(a/2)) + 20*math.sin(math.radians(a/2))*math.sin(math.radians(b/2))
+
+        print x, y, z
+        opengl.sight = (x, y, z)
 
         # Set frame rate
         clock.tick(50)
