@@ -26,7 +26,7 @@ class myOpenGL:
 
         # Default parameters
         self.angle = (0, 0)
-        self.sight = (0, 0, -10)
+        self.sight = (0, 0)
         self.position = (0, 0, 5)
 
     def resize(self, width, height):
@@ -48,9 +48,12 @@ class myOpenGL:
         # Reset Modelview
         glLoadIdentity()
 
-        # Set camera
-        param = self.position + self.sight + (0,1,0)
-        gluLookAt(*param)
+        # Move the object
+        x, y = self.sight
+        glRotatef(x, 0, 1, 0)
+        glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
+        x, y, z = self.position
+        glTranslatef(-x, -y, -z)
 
 
         ''' Render Cube'''
@@ -201,29 +204,14 @@ def main():
             
             if event.type == KEYUP and event.key == K_RIGHT:
                 tx = 0
-
-        if tx != 0 or ty != 0:
-            # Get and update sight angle
-            a, b = opengl.angle
-            a, b = a + tx, b + ty
-            b = max(-90, min(90, b))
-            opengl.angle = (a, b)
-
-            # Update pointing vector for camera
-            # Spin radius: 10
-            radius = 1
-            x, y, z = opengl.sight
-            x += 2*math.sin(math.radians(a/2))*math.cos(math.radians(a/2)) * radius
-            y += 2*math.sin(math.radians(b/2))*math.cos(math.radians(b/2)) * radius
-            z += (2*math.sin(math.radians(a/2))*math.sin(math.radians(a/2)) + 2*math.sin(math.radians(a/2))*math.sin(math.radians(b/2))) * radius
-            opengl.sight = (x, y, z)
         
-        x, y, z = opengl.sight
-        opengl.sight = (x+dx, y+dy, z+dz)
-
+        # Update sight vector                
+        x, y = opengl.sight
+        opengl.sight = (x+tx*5, y+ty*5)
+        
         # Update camera position
-        print x,y,z
         x, y, z = opengl.position
+        print x,y,z
         opengl.position = (x+dx, y+dy, z+dz)
 
         # Set frame rate
