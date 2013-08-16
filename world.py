@@ -57,10 +57,10 @@ class myOpenGL:
         glColor3f(.3, 1, .3)
         # Begin rendering
         glBegin(GL_QUADS)
-        glVertex3f(-1, 1, 0)
-        glVertex3f(1, 1, 0)
-        glVertex3f(1, -1, 0)
-        glVertex3f(-1, -1, 0)
+        glVertex3f(-1, 1, 1)
+        glVertex3f(1, 1, 1)
+        glVertex3f(1, -1, 1)
+        glVertex3f(-1, -1, 1)
         glEnd()
 
         ## Back face
@@ -68,10 +68,10 @@ class myOpenGL:
         glColor3f(1, 1, 1)
         # Begin rendering
         glBegin(GL_QUADS)
-        glVertex3f(-1, 1, -2)
-        glVertex3f(1, 1, -2)
-        glVertex3f(1, -1, -2)
-        glVertex3f(-1, -1, -2)
+        glVertex3f(-1, 1, -1)
+        glVertex3f(1, 1, -1)
+        glVertex3f(1, -1, -1)
+        glVertex3f(-1, -1, -1)
         glEnd()
 
         ## Top face
@@ -79,10 +79,10 @@ class myOpenGL:
         glColor3f(1, .3, .3)
         # Begin rendering
         glBegin(GL_QUADS)
-        glVertex3f(-1, 1, 0)
-        glVertex3f(1, 1, 0)
-        glVertex3f(1, 1, -2)
-        glVertex3f(-1, 1, -2)
+        glVertex3f(-1, 1, 1)
+        glVertex3f(1, 1, 1)
+        glVertex3f(1, 1, -1)
+        glVertex3f(-1, 1, -1)
         glEnd()
 
         ## Bottom face
@@ -90,10 +90,10 @@ class myOpenGL:
         glColor3f(1, 1, .3)
         # Begin rendering
         glBegin(GL_QUADS)
-        glVertex3f(1, -1, 0)
-        glVertex3f(1, -1, -2)
-        glVertex3f(-1, -1, -2)
-        glVertex3f(-1, -1, 0)
+        glVertex3f(1, -1, 1)
+        glVertex3f(1, -1, -1)
+        glVertex3f(-1, -1, -1)
+        glVertex3f(-1, -1, 1)
         glEnd()
 
         ## Right face
@@ -101,10 +101,10 @@ class myOpenGL:
         glColor3f(.3, .3, 1)
         # Begin rendering
         glBegin(GL_QUADS)
-        glVertex3f(1, 1, -2)
-        glVertex3f(1, 1, 0)
-        glVertex3f(1, -1, 0)
-        glVertex3f(1, -1, -2)
+        glVertex3f(1, 1, -1)
+        glVertex3f(1, 1, 1)
+        glVertex3f(1, -1, 1)
+        glVertex3f(1, -1, -1)
         glEnd()
 
         ## Left face
@@ -112,10 +112,10 @@ class myOpenGL:
         glColor3f(.3, 1, 1)
         # Begin rendering
         glBegin(GL_QUADS)
-        glVertex3f(-1, 1, 0)
-        glVertex3f(-1, 1, -2)
-        glVertex3f(-1, -1, -2)
-        glVertex3f(-1, -1, 0)
+        glVertex3f(-1, 1, 1)
+        glVertex3f(-1, 1, -1)
+        glVertex3f(-1, -1, -1)
+        glVertex3f(-1, -1, 1)
         glEnd()
 
 
