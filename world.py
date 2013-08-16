@@ -130,19 +130,26 @@ class myOpenGL:
 def main():
     # Initialize pygame
     pygame.init()
+
+    # Initialize mouse, muse before initialize screen, otherwise will triger mouse movement
+    pygame.event.set_grab(True)
+    pygame.mouse.set_visible(False)
+
+    # Initialize screen
     screen = pygame.display.set_mode(SCREEN_SIZE, HWSURFACE|OPENGL|DOUBLEBUF)
     pygame.display.set_caption("Hello, World!")
-
-    # clock for framerate
-    clock = pygame.time.Clock()
-
 
     # Initialize opengl
     opengl = myOpenGL()
 
+    # Intialize movement vector
     dx = dy = dz = 0
     tx = ty = tz = 0
 
+    # Clock for framerate
+    clock = pygame.time.Clock()
+    
+    # Game loop
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -217,15 +224,23 @@ def main():
             
             if event.type == KEYUP and event.key == K_RIGHT:
                 tx = 0
-        
+
+            # Change sight via mouse movement
+            if event.type == MOUSEMOTION:
+                tx, ty = pygame.mouse.get_rel()
+                m = .15
+                tx *= m
+                ty *= -m
+                x, y = opengl.sight
+                opengl.sight = (x+tx, y+ty)
+                tx = ty = 0
+
         # Update sight vector                
         x, y = opengl.sight
-        print x,y
-        opengl.sight = (x+tx*5, y+ty*5)
+        opengl.sight = (x+tx, y+ty)
         
         # Update camera position
         x, y, z = opengl.position
-        print x,y,z
         opengl.position = (x+dx, y+dy, z+dz)
 
         # Set frame rate
