@@ -148,32 +148,42 @@ def main():
                 return
 
             ''' For movement '''
+            x, y = opengl.sight
+
             # move forward
             if event.type == KEYDOWN and event.key == K_w:
-                dz = -SPEED
+                dz = -SPEED * math.cos(math.radians(x))
+                dx = SPEED * math.sin(math.radians(x))
             
             if event.type == KEYUP and event.key == K_w:
                 dz = 0
+                dx = 0 
             
             # move backward
             if event.type == KEYDOWN and event.key == K_s:
-                dz = SPEED
+                dz = SPEED * math.cos(math.radians(x))
+                dx = -SPEED * math.sin(math.radians(x))
 
             if event.type == KEYUP and event.key == K_s:
                 dz = 0
+                dx = 0
 
             # move left
             if event.type == KEYDOWN and event.key == K_a:
-                dx = -SPEED
+                dz = -SPEED * math.cos(math.radians(x - 90))
+                dx = SPEED * math.sin(math.radians(x - 90))
             
             if event.type == KEYUP and event.key == K_a:
+                dz = 0
                 dx = 0
 
             # move right
             if event.type == KEYDOWN and event.key == K_d:
-                dx = SPEED
+                dz = -SPEED * math.cos(math.radians(x + 90))
+                dx = SPEED * math.sin(math.radians(x + 90))
             
             if event.type == KEYUP and event.key == K_d:
+                dz = 0
                 dx = 0
 
             ''' For sight direction '''
@@ -207,6 +217,7 @@ def main():
         
         # Update sight vector                
         x, y = opengl.sight
+        print x,y
         opengl.sight = (x+tx*5, y+ty*5)
         
         # Update camera position
