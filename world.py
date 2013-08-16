@@ -83,7 +83,7 @@ class myOpenGL:
         glLoadIdentity()
 
         # Change Modelview into screen 5 units
-        glTranslatef(.0, .0, -5.0)
+        glTranslatef(.0, .0, -8.0)
 
         # Rotate on x, y, z axis
         self.angle += 2
@@ -101,6 +101,11 @@ class myOpenGL:
 
         # Draw the cube
         glDrawElements(GL_QUADS, len(indice), GL_UNSIGNED_INT, indice)
+
+        # Draw another cube on its local coordinate system
+        glTranslatef(3, 0, -3)
+        glRotatef(self.angle*3, 1, -1, 1)
+        glDrawElements(GL_QUADS, len(indice), GL_UNSIGNED_INT, indice)        
         
         # Disable arrays
         glDisableClientState(GL_COLOR_ARRAY)
