@@ -1,3 +1,4 @@
+import math
 import pygame
 
 # OpenGL stuff
@@ -27,6 +28,8 @@ class Graphic:
 
         # Default parameters
         self.angle = 0
+        self.sight = (0, 0)
+        self.position = (0, 0, 5)
         self.textId = 0
         self.texIDs = self.loadTexture("texture3.png")
 
@@ -100,13 +103,12 @@ class Graphic:
         # Reset Modelview
         glLoadIdentity()
 
-        # Change Modelview into screen 2 units
-        glTranslatef(.0, .0, -2.0)
-
-        # Rotate on x, y, z axis
-        self.angle += 2
-        self.angle %= 360
-        glRotatef(self.angle, 0, 1, 0)
+        # Move the object
+        x, y = self.sight
+        glRotatef(x, 0, 1, 0)
+        glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
+        x, y, z = self.position
+        glTranslatef(-x, -y, -z)
 
     ### Draw rectangles
     def drawRects(self, position, texCoord):
