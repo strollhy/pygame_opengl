@@ -152,7 +152,7 @@ def main():
     # Initialize pygame
     pygame.init()
 
-    # Initialize mouse, muse before initialize screen, otherwise will triger mouse movement
+    # Initialize mouse, must before initialize screen, otherwise will triger mouse movement
     pygame.event.set_grab(True)
     pygame.mouse.set_visible(False)
 
