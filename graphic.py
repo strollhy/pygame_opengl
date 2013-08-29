@@ -33,6 +33,9 @@ class Graphic:
         self.textId = 0
         self.texIDs = self.loadTexture("texture3.png")
 
+        # Setup Fog
+        self.setup_fog()
+
     def resize(self, width, height):
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
@@ -139,3 +142,21 @@ class Graphic:
         ''' '''
         glEnd()
         glDisable(GL_TEXTURE_2D)
+
+    def setup_fog(self):
+        """ Configure the OpenGL fog properties.
+
+        """
+        # Enable fog. Fog "blends a fog color with each rasterized pixel fragment's
+        # post-texturing color."
+        glEnable(GL_FOG)
+        # Set the fog color.
+        glFogfv(GL_FOG_COLOR, (GLfloat * 4)(0.5, 0.69, 1.0, 1))
+        # Say we have no preference between rendering speed and quality.
+        glHint(GL_FOG_HINT, GL_DONT_CARE)
+        # Specify the equation used to compute the blending factor.
+        glFogi(GL_FOG_MODE, GL_LINEAR)
+        # How close and far away fog starts and ends. The closer the start and end,
+        # the denser the fog in the fog range.
+        glFogf(GL_FOG_START, 20.0)
+        glFogf(GL_FOG_END, 60.0)

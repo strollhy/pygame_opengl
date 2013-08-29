@@ -5,7 +5,7 @@ from graphic import Graphic
 from world import World
 
 #
-SCREEN_SIZE = (320, 240)
+SCREEN_SIZE = (640, 480)
 
 # Movement speed
 SPEED = 1.0
@@ -170,12 +170,10 @@ class Core:
                 self.tx = self.ty = 0
 
     def draw(self):
-        # Generate coordinates
-        pos = World.genCube(0, 0, 0)
+        # Draw the entire world
         tex = Graphic.genTexcoord(self.graphic.textId)
-
-        # Render cube
-        self.graphic.drawRects(pos, tex) 
+        for k,m in self.world.map.items():
+            self.graphic.drawRects(m, tex)
 
 if __name__ == "__main__":
     core = Core()
