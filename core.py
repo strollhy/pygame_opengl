@@ -44,7 +44,7 @@ class Core:
     def __game_loop(self):
         while True:
             # Response to event
-            self.__on_event()
+            self.__event()
             
             # Set frame rate
             self.clock.tick(50)
@@ -61,13 +61,12 @@ class Core:
             self.graphic.render()
 
             # Draw objects
-            self.__on_draw()
+            self.__draw()
 
             # Show the screen
             pygame.display.flip()
 
-    def __on_event(self):
-
+    def __event(self):
         self.__get_movement()
 
         for event in pygame.event.get():
@@ -176,7 +175,7 @@ class Core:
         self.dz = sum(v_z)
         self.dx = sum(v_x)
 
-    def __on_draw(self):
+    def __draw(self):
         # Draw the entire world
         tex = Graphic.genTexcoord(self.graphic.textId)
         for k,m in self.world.map.items():
