@@ -177,6 +177,7 @@ class Core:
 
     def __draw(self):
         # Draw the entire world
+        self.world.genWave()
         tex = Graphic.genTexcoord(self.graphic.textId)
         for k,m in self.world.map.items():
             self.graphic.drawRects(m, tex)
